@@ -4,6 +4,7 @@
 /bower_components/
 /node_modules/
 /.idea/
+/.snd/
 # Compiled source #
 ###################
 *.com
@@ -25,7 +26,6 @@
 *.rar
 *.tar
 *.zip
-*.sass
 
 # Logs and databases #
 ######################
@@ -42,3 +42,5 @@
 .Trashes
 ehthumbs.db
 Thumbs.db
+/prepros.cfg
+/css/styles.sass
