@@ -80,7 +80,7 @@ h1, h2, h3 {
 #strict {
   width: 40px;
   height: 40px;
-  background-color: white;
+  background-color: black;
   border: 1px solid #1dca10;
   border-radius: 50%;
 }
@@ -90,10 +90,7 @@ h1, h2, h3 {
   height: 347px;
   border: 1px solid black;
   margin: 0;
-}
-
-.light {
-  opacity: 1;
+  opacity: 0.6;
 }
 
 .board {
@@ -122,29 +119,33 @@ h1, h2, h3 {
 }
 
 #red {
-  background-color: #c80e25;
+  background-color: rgba(204, 34, 34, 0.6);
   border-bottom: none;
   border-left: none;
   border-radius: 0 100% 0 0;
 }
 
 #blue {
-  background-color: #283cc3;
+  background-color: rgba(35, 61, 229, 0.6);
   border-top: none;
   border-right: none;
   border-radius: 0 0 0 100%;
 }
 
 #yellow {
-  background-color: #d0cf00;
+  background-color: rgba(208, 207, 0, 0.6);
   border-bottom: none;
   border-right: none;
   border-radius: 100% 0 0 0;
 }
 
 #green {
-  background-color: rgba(29, 202, 16, 0.6);
+  background-color: rgba(0, 255, 0, 0.6);
   border-top: none;
   border-left: none;
   border-radius: 0 0 100% 0;
+}
+
+.lightOn {
+  opacity: 1;
 }
