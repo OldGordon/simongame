@@ -19,25 +19,29 @@ Game = function () {
     this.state = false;
 	this.counter = 0;
 	this.playerTurn = false;
-	this.flag = true;
+	this.level = 700;
 };
 Game.prototype = (function () {
         //@param 2 integers, return integer
         var getRandom = function (min, max) {
                 return Math.floor(Math.random () * (max - min) + min);
             },
-
             initShow = function () {
 				var time = 0 ,
-				    interval = setInterval(function (){
+					startSnd = 	$("<audio autoplay></audio>");
+				    startSnd.append('<source src="https://www.dropbox.com/s/gs3qxobi0tfebjf/init.mp3?dl=1" />');
+				var interval = setInterval(function (){
 							   //parpadean 3 veces y luego una vez cada uno
 								$(".color").toggleClass("lightOn","lightOff")
 								           .toggleClass("lightOff","lightOn");
+								/*for(var i = 0 ; i < 5; i++){
+									$(".color[data-num=" + i + "]").toggleClass("lightOn","lightOff")
+								}*/
 								++time;
 //console.log(time);
-								if(time >= 6)clearInterval(interval);
+								if(time >= 8)clearInterval(interval);
 								state = false;
-                }, 200)
+                }, 300)
             },
             reset = function () {
                 this.tempArr = [];
@@ -47,20 +51,19 @@ Game.prototype = (function () {
                 this.state = false;
 				this.counter = 0;
 				this.playerTurn = false;
-
             },
             gameOver = function (endSnd) {
 				var sndTag  = $("<audio autoplay></audio>");
-				if(endSnd) {
+				if(endSnd === "lose") {
 					sndTag.append('<source src="https://www.dropbox.com/s/6tydremc4y2q9g2/SadError.mp3?dl=1" type="audio/mp3" />');
-				}else {
+				}else if ( endSnd === "win") {
 					sndTag.append('<source src="https://www.dropbox.com/s/apx3q76poawll4x/Yeah.mp3?dl=1" type="audio/mp3" />');
 				}
             	reset();
+				console.log(this.tempArr,this.counter,this.start);
 			},
             //@param array , return audio
             playSndColor = function (bip) {
-
 				var sndTag  = $("<audio autoplay></audio>");
 				sndTag.append('<source src="https://s3.amazonaws.com/freecodecamp/simonSound' + bip + '.mp3" type="audio/mp3" />');
                 $(".color[data-num=" + bip + "]").addClass("lightOn");
@@ -70,23 +73,19 @@ Game.prototype = (function () {
 
             },
 			compareSnd = function (idColor) {
-
-				var gameIn = this.song.shift();
-
-				this.flag = (gameIn === idColor);
-
-				if(this.song.length === 0 && this.flag){
+				var gameIn = this.song.shift(),
+					flag = (gameIn === idColor);
+				if(this.song.length === 0 && flag){
 					$(".color[data-num]").off("click" );
 					nextPlay.call(this);
 					//console.log("hasta aki llego",this.flag);
-				}else if (!this.flag){
+				}else if (!flag){
 					$(".color[data-num]").off("click" );
 					console.log(this);
-					gameOver(true);
+					gameOver("lose");
 				}
 			},
 		    getInput = function () {
-
 				var thisObj = this;
 				if (this.start) {
 						$(".color").on("click", function () {
@@ -97,29 +96,32 @@ Game.prototype = (function () {
 					}
 			},
             sequenceStart = function (arr) {
-
+				if(this.counter > 10) {
+					this.level = 500;
+				}else if (this.counter > 16){
+					this.level = 300;
+				}else if(this.counter === 20 ) {
+					console.log(this.counter);
+					gameOver("win");
+				}
                 var thisObj = this,
                     count = 0,
                     lapso = setInterval(function() {
                         playSndColor(arr[count]);
-						console.log(arr[count]);
-                        count++;
+						count++;
                         if (count >= arr.length ) {
                             clearInterval(lapso);
 							thisObj.playerTurn = true;
-							console.log(thisObj);
 							getInput.call(thisObj);
                         }
-                    }, 700);
+                    }, thisObj.level);
             },
             nextPlay = function () {
 				var thisObj = this;
-
 				window.setTimeout(function(){
 					$("#counter").html(++thisObj.counter );
 					thisObj.tempArr.push(getRandom(1, 5));
 					thisObj.song = thisObj.tempArr.slice(0);
-
 					sequenceStart.call(thisObj, thisObj.tempArr);
 				}, 400);
 			},
@@ -130,15 +132,13 @@ Game.prototype = (function () {
 				this.start = true;
 				console.log(this);
 				nextPlay.call(this);
-
 			};
 
         return {
             initShow: initShow, //public
             gameStart: gameStart //public
         };
-
-    })();
+})();
     $(document).ready(function () {
         'use strict';
         var game = new Game();
